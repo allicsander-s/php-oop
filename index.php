@@ -1,13 +1,5 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-require_once('Myclass.php');
-$My_object_1 = new Myclass("Sasha");
-echo "<br>";
-$My_object_2 = new Myclass("Masha");
-echo "<br>";
-$My_object_1->doSomethingBeautiful();
-
+include('Math.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
