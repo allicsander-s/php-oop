@@ -1,6 +1,7 @@
 <?php
 include('Math.php');
 $c = new Math();
+$c->add(3,2,4,5,6);
 ?>
 <!DOCTYPE html>
 <html lang="en">
