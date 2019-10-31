@@ -7,6 +7,10 @@
  */
 class Math{
   
+  /**
+   * Add as many arguments (ints) as you wish, and this method will calculate the sum  
+   * @return int the sum of all the arguments
+   */
  function add(){
  	 $args = func_num_args();
  	 $sum = 0;
