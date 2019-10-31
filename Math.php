@@ -9,6 +9,14 @@ class Math{
   
  function add(){
  	 $args = func_num_args();
+ 	 $sum = 0;
+ 	 $i = 0;
+
+ 	 for ($i; $i < $args; $i++) { 
+ 	 	 is_int(func_get_arg($i)) ? $sum += func_get_arg($i) : die("only integers , por favor");
+ 	 }
+ 
+ return $sum;
  }
 
 
