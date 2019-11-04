@@ -1,15 +1,18 @@
 <?php
 
-class Myclass {
+class Myclass 
+{
+  private $_var = 'my value qq'; 
 
-	public $name;
+  private function _conc()
+  {
+  	echo "<br>";
+  }
 
-	function __construct($name){
-     $this->name = $name;
-     echo $this->name;
-	}
 
-	function doSomethingBeautiful(){
-		echo 'doing something'; 
-	}
+  public function show()
+  { 
+  	$this->_conc();
+  	echo $this->_var;
+  }
 }

@@ -1,7 +1,9 @@
 <?php
-include('Math.php');
-$c = new Math();
-echo $c->add(3,2,4,5,6);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+include('Myclass.php');
+$MyObject = new Myclass();
+$MyObject->show();
 ?>
 <!DOCTYPE html>
 <html lang="en">
