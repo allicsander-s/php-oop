@@ -1,24 +1,16 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-include('File.php');
+require_once ('ParentClass.php');
+require_once ('ChildClass.php');
 
-echo '<pre>';
-print_r(File::checkImage('exot_frukty.jpg'));
-echo '</pre>';
+$parent = new ParentClass();
 
-echo '<pre>';
-print_r(File::checkImage('README.md'));
-echo '</pre>';
+$result = $parent->doSomething();
+echo '<br>', $result, '<br>';
 
-echo File::getTimesFileIsChecked();
 
-$ins = new File;
-echo '<pre>';
-print_r($ins::checkImage('README.md'));
-echo '</pre>';
-
-echo $ins::getTimesFileIsChecked();
+$child = new ChildClass();
 
 ?>
 <!DOCTYPE html>
