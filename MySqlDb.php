@@ -1,28 +1,58 @@
 <?php
 
-  function connect()
-  {
-  	$conn = new mysqli('localhost', 'db_user', 'some password goes here:)', 'db') or die('there was a connecting problem');
-  	return $conn;
-  }
+class MySqlDb
+{
 
-  function get($tableName, $conn)
-  {
-    $st = $conn->prepare("SELECT id, title , body FROM $tableName") or die('problem with query');
-    $st->execute();
-    $st->bind_result($id, $title, $body);
-    
-    $rows = array(); 
+  protected $_mysql;
+  protected $_query;
 
-    while ($row = $st->fetch()) {
-      $item = array(
-          'id' => $id,
-          'title' => $title,
-          'body' => $body
-      	);
-      $rows[] = $item;
-    }
+	public function __construct($hostname, $username, $password, $db)
+	{
+		echo "im running here. wow", "<br>";
+		$this->_mysql = new mysqli($hostname, $username, $password, $db ) or die("there is a problem connecting to the database(((");
+	}
 
-    return $rows;
+	public function query($query)
+	{
+    $this->_query = filter_var($query, FILTER_SENITIZE_STRING);
+	} 
 
-  }
+	public function get($tableName, $nubRows = null)
+	{
+
+	}
+
+	public function insert($tableName, $insertData)
+	{
+
+	}
+
+	public function update($tableName, $updateData)
+	{
+
+	}
+
+	public function dalete($tableName)
+	{
+
+	}
+
+	public function where($whereProp, $whereVal)
+	{
+
+	}
+
+	protected function _prepareQuery()
+	{
+	  if( !$stmt = $this->_mysql->prepare($this->_query)){
+      trigger_error('Problem preparing some query', E_USER_ERROR);
+	  }	
+	  return $stmt;
+	}
+
+	public function __destruct()
+	{
+
+	}
+
+}
