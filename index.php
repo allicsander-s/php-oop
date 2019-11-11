@@ -13,7 +13,7 @@ echo '</pre>';
 
 echo File::getTimesFileIsChecked();
 
-$ins = new File();
+$ins = new File;
 echo '<pre>';
 print_r($ins::checkImage('README.md'));
 echo '</pre>';
