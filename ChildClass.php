@@ -7,5 +7,4 @@ class ChildClass extends ParentClass
   	parent::__construct();
   	echo __CLASS__ . " has been instantiated";
   } 
-
 }
