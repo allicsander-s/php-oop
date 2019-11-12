@@ -5,6 +5,8 @@ class MySqlDb
 
   protected $_mysql;
   protected $_query;
+  protected $_where = array();
+  protected $_paramTypeList;
 
 	public function __construct($hostname, $username, $password, $db)
 	{
@@ -21,9 +23,14 @@ class MySqlDb
     return $results;
 	} 
 
-	public function get($tableName, $nubRows = null)
+	public function get($tableName, $numRows = null)
 	{
+    $this->_query = "SELECT * FROM $tableName";
+    $stmt = $this->_buildQuery($numRows);
+    $stmt->execute();
 
+    $results = $this->_dynamicBindResults($stmt);
+    return $results;
 	}
 
 	public function insert($tableName, $insertData)
@@ -43,8 +50,74 @@ class MySqlDb
 
 	public function where($whereProp, $whereVal)
 	{
-
+    $this->_where[$whereProp] = $whereVal;
 	}
+  
+  protected function _buildQuery($numRows = null, $tableData = false)
+  {  
+
+    $hasTableData = null;
+
+    if( gettype($tableData) === 'array' ){
+    	$hasTableData = true; 
+    }
+    
+    if (!empty($this->_where)){
+    	$keys = array_keys($this->_where);
+    	$where_prop = $keys[0];
+      $where_val = $this->_where[$where_prop]; 
+     
+
+        if ($hasTableData){
+    	     foreach ($tableData as $prop => $val) {
+    		 
+           }
+          
+
+		    }else{
+		    	$this->_paramTypeList = $this->_determineType($where_val);
+		    	$this->_query .= " WHERE " . $where_prop . "= ?"  ;
+		    }
+   }
+
+    if(isset($numRows)){
+    	$this->_query .= " LIMIT " . (int)$numRows;
+    }
+ 
+    
+    $stmt = $this->_prepareQuery();
+
+    # parameters biding 
+    if($this->_where){
+    	$stmt->bind_param($this->_paramTypeList, $where_val); 
+    }
+
+    return $stmt; 
+
+  }
+  
+
+  protected function _determineType($item)
+  {
+  	switch (gettype($item)) {
+  		case 'value':
+  			$param_type = 's';
+  			break;
+  		case 'integer':
+  			$param_type = 'i';
+  			break;
+  		case 'blob':
+  			$param_type = 'b';
+  			break;
+  		case 'double':
+  			$param_type = 'd';
+  			break;
+  
+  	}
+
+    return $param_type;
+
+  }
 
 	protected function _dynamicBindResults($stmt)
 	{
@@ -56,7 +129,8 @@ class MySqlDb
     while($field = $meta->fetch_field()){
     	$parameters[] = &$row[$field->name];
     }
-
+    
+    // pretty difficult stuff btw :)
     call_user_func_array( array($stmt, 'bind_result'), $parameters);
 
     while ( $stmt->fetch() ) {
@@ -72,9 +146,10 @@ class MySqlDb
 	}
 
 	protected function _prepareQuery()
-	{
+	{  
+    
 	  if( !$stmt = $this->_mysql->prepare($this->_query)){
-      trigger_error('Problem preparing some query', E_USER_ERROR);
+      trigger_error('Problem preparing the query', E_USER_ERROR);
 	  }	
 	  return $stmt;
 	}

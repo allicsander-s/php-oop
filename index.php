@@ -1,26 +1,28 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-require_once ('MySqlDb.php');
+require('MySqlDb.php');
 
-$conn = connect();
-$posts = get('posts', $conn);
+$Db = new MySqlDb('localhost', 'db_user', 'some password here', 'db');
+// $results = $Db->query("INSERT INTO");
+
+$Db->where('id', 1);
+$results = $Db->get('posts');
+print_r($results );
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>procedural way</title>
+	<title>oop way</title>
 </head>
 <body>
 
-<?php  foreach ($posts as $post): ?>
-  
-  <h2> <?php echo $post['title'];  ?> </h2>
-  <p> <?php echo $post['body'];  ?> </p>
+<?php foreach ($results as $row): ?>
+  <h2><?php echo $row['title']; ?></h2>
+  <div><?php echo $row['body']; ?></div>
+<?php endforeach; ?>
 
-<?php  endforeach; ?>
-	
 </body>
 </html>
