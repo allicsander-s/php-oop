@@ -14,7 +14,10 @@ class MySqlDb
 
 	public function query($query)
 	{
-    $this->_query = filter_var($query, FILTER_SENITIZE_STRING);
+    $this->_query = filter_var($query, FILTER_SANITIZE_STRING); 
+    $stmt = $this->_prepareQuery();
+    $stmt->execute();
+    $results = $this->_dynamicBindResults($stmt);
 	} 
 
 	public function get($tableName, $nubRows = null)
@@ -40,6 +43,14 @@ class MySqlDb
 	public function where($whereProp, $whereVal)
 	{
 
+	}
+
+	protected function _dynamicBindResults($stmt)
+	{
+    $meta = $stmt->result_metadata();
+    while($field = $meta->fetch_field()){
+    	print_r($field);
+    }
 	}
 
 	protected function _prepareQuery()
