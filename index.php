@@ -3,15 +3,17 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require('MySqlDb.php');
 
-$Db = new MySqlDb('localhost', 'db_user', 'some awesome password', 'db');
+$Db = new MySqlDb('localhost', 'db_user', 'my strong password', 'db');
 
-$insertData = [ 
-  'title' => 'Inserted juicy title',
-  'body' => 'Inserted body'
-];
+// $updateData = [
+//                 'title' => 'updated title',
+//                 'body' => 'updated body'
+//               ];
 
-if( $Db->insert('posts', $insertData) )
-    echo 'huge success!!';
+$Db->where('id',3);
+$results = $Db->delete('posts');
+
+
 
 ?>
 <!DOCTYPE html>

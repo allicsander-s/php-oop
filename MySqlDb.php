@@ -46,11 +46,24 @@ class MySqlDb
 
 	public function update($tableName, $updateData)
 	{
+    $this->_query = "UPDATE $tableName SET ";
+    $stmt = $this->_buildQuery(null, $updateData);
+    $stmt->execute();
 
+    if($stmt->affected_rows){
+      return true;
+    }
 	}
 
-	public function dalete($tableName)
+	public function delete($tableName)
 	{
+		$this->_query = "DELETE FROM $tableName";
+    $stmt = $this->_buildQuery();
+    $stmt->execute();
+
+    if($stmt->affected_rows){
+      return true;
+    }
 
 	}
 
@@ -74,18 +87,33 @@ class MySqlDb
     	$where_prop = $keys[0];
       $where_val = $this->_where[$where_prop]; 
      
-
+     
         if ($hasTableData){
         	 $i = 1;
-    	     foreach ($tableData as $prop => $val) {
-    		     echo $prop . ' ' . $val .'<br>';
-           }
-          
+           $pos = strpos($this->_query, 'UPDATE');
+           
 
-		    }else{
-		    	$this->_paramTypeList = $this->_determineType($where_val);
-		    	$this->_query .= " WHERE " . $where_prop . "= ?"  ;
-		    }
+           if ($pos !== false) {
+           
+              $i = 1;
+    	        foreach ($tableData as $prop => $val) {
+    		         $this->_paramTypeList .= $this->_determineType($val);
+                
+                if($i === count($tableData)){
+                	$this->_query .= $prop . " = ? WHERE " . $where_prop . "= ". $where_val;
+                } else{
+                	$this->_query .= $prop . " = ?, ";
+                }
+               $i++;
+              }   
+
+           } 
+        }
+        else{
+		    	  $this->_paramTypeList = $this->_determineType($where_val);
+		      	$this->_query .= " WHERE " . $where_prop . " = ?"  ;
+
+		       }
    }
 
   if ($hasTableData){
@@ -97,28 +125,26 @@ class MySqlDb
     if ($hasTableData){
      
     	$pos = strpos($this->_query, 'INSERT');
-    
-    }
   
-    if( $pos !== false){ 
-    	$keys = array_keys($tableData);
-    	$vals = array_values($tableData);
-    	$num = count($keys);
-    	echo $num;
-    	foreach ($vals as $key => $val) {
-    		$vals[$key] = "'{$val}'";
-    		$this->_paramTypeList .= $this->_determineType($val);
-    	}
+	    if( $pos !== false){ 
+	    	$keys = array_keys($tableData);
+	    	$vals = array_values($tableData);
+	    	$num = count($keys);
+	    	echo $num;
+		    	foreach ($vals as $key => $val) {
+		    		$vals[$key] = "'{$val}'";
+		    		$this->_paramTypeList .= $this->_determineType($val);
+		    	}
 
-      $this->_query .= '(' . implode($keys, ', ') . ')';
-      $this->_query .= ' VALUES' . '(' ;
+		      $this->_query .= '(' . implode($keys, ', ') . ')';
+		      $this->_query .= ' VALUES' . '(' ;
 
-      while($num !== 0){
-        ($num !== 1) ? $this->_query .= "?, ": $this->_query .= "?)";
-        $num --;
-      }
-
-  
+		      while($num !== 0){
+		        ($num !== 1) ? $this->_query .= "?, ": $this->_query .= "?)";
+		        $num --;
+		      }
+		     
+	      }
 
     }
 
@@ -204,6 +230,7 @@ class MySqlDb
 	{  
     
 	  if( !$stmt = $this->_mysql->prepare($this->_query)){
+	  	echo $this->_query;
       trigger_error('Problem preparing the query', E_USER_ERROR);
 	  }	
 	  return $stmt;
@@ -211,7 +238,7 @@ class MySqlDb
 
 	public function __destruct()
 	{
-
+    $this->_mysql->close();
 	}
 
 }
