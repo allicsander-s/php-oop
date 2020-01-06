@@ -3,19 +3,20 @@
 ### MySqlDb class - максимально гибкий wrapper для работы с базой данных 
 
 
+to-do:
+rewrite ot PSR standarts
 
 
+# Markdown file from StackEdit2! just for some fun testing
 
-# Markdown file from StackEdit2! just of some fun testing
-
-wanna have a piture here
+wanna have a piture here :)
 ![demo](http://placehold.it/350X150)
 
 interesting php stuff
 ```php
 call_user_func_array( array($stmt, 'bind_result'), $parameters);
 ```
-![demo](exot_frukty.jpg)
+![exot_frukty](exot_frukty.jpg)
 
 Hi! I'm your first Markdown file in **StackEdit**. If you**strong text** want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
 
